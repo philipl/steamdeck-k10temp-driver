@@ -20,7 +20,8 @@
 #include <linux/module.h>
 #include <linux/pci.h>
 #include <linux/pci_ids.h>
-#include <asm/amd_nb.h>
+#include "internal/pci_ids.h"
+#include "internal/amd_nb.h"
 #include <asm/processor.h>
 
 MODULE_DESCRIPTION("AMD Family 10h+ CPU core temperature monitor");
@@ -386,6 +387,8 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 	struct device *hwmon_dev;
 	int i;
 
+        init_amd_nbs();
+
 	if (unreliable) {
 		if (!force) {
 			dev_err(dev,
@@ -427,6 +430,9 @@ static int k10temp_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 		case 0x71:	/* Zen2 */
 			data->ccd_offset = 0x154;
 			k10temp_get_ccd_support(pdev, data, 8);
+			break;
+		case 0x90:	/* Van Gogh */
+		        /* Does not appear to report any ccd values. */
 			break;
 		}
 	} else if (boot_cpu_data.x86 == 0x19) {
@@ -489,6 +495,7 @@ static const struct pci_device_id k10temp_id_table[] = {
 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F3) },
 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
+	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_17H_M90H_DF_F3) },
 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F3) },
 	{ PCI_VDEVICE(AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F3) },

@@ -13,18 +13,21 @@
 #include <linux/export.h>
 #include <linux/spinlock.h>
 #include <linux/pci_ids.h>
-#include <asm/amd_nb.h>
+#include "pci_ids.h"
+#include "amd_nb.h"
 
 #define PCI_DEVICE_ID_AMD_17H_ROOT	0x1450
 #define PCI_DEVICE_ID_AMD_17H_M10H_ROOT	0x15d0
 #define PCI_DEVICE_ID_AMD_17H_M30H_ROOT	0x1480
 #define PCI_DEVICE_ID_AMD_17H_M60H_ROOT	0x1630
+#define PCI_DEVICE_ID_AMD_17H_M90H_ROOT	0x1645
 #define PCI_DEVICE_ID_AMD_19H_M10H_ROOT	0x14a4
 #define PCI_DEVICE_ID_AMD_17H_DF_F4	0x1464
 #define PCI_DEVICE_ID_AMD_17H_M10H_DF_F4 0x15ec
 #define PCI_DEVICE_ID_AMD_17H_M30H_DF_F4 0x1494
 #define PCI_DEVICE_ID_AMD_17H_M60H_DF_F4 0x144c
 #define PCI_DEVICE_ID_AMD_17H_M70H_DF_F4 0x1444
+#define PCI_DEVICE_ID_AMD_17H_M90H_DF_F4 0x1664
 #define PCI_DEVICE_ID_AMD_19H_DF_F4	0x1654
 #define PCI_DEVICE_ID_AMD_19H_M10H_DF_F4 0x14b1
 #define PCI_DEVICE_ID_AMD_19H_M40H_ROOT	0x14b5
@@ -41,6 +44,7 @@ static const struct pci_device_id amd_root_ids[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_ROOT) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_ROOT) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_ROOT) },
+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M90H_ROOT) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_ROOT) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_ROOT) },
 	{}
@@ -61,6 +65,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M10H_DF_F3) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F3) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F3) },
+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M90H_DF_F3) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_CNB17H_F3) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F3) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F3) },
@@ -81,6 +86,7 @@ static const struct pci_device_id amd_nb_link_ids[] = {
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M30H_DF_F4) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M60H_DF_F4) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M70H_DF_F4) },
+	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_17H_M90H_DF_F4) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_DF_F4) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M10H_DF_F4) },
 	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M40H_DF_F4) },
@@ -117,19 +123,19 @@ u16 amd_nb_num(void)
 {
 	return amd_northbridges.num;
 }
-EXPORT_SYMBOL_GPL(amd_nb_num);
+//EXPORT_SYMBOL_GPL(amd_nb_num);
 
 bool amd_nb_has_feature(unsigned int feature)
 {
 	return ((amd_northbridges.flags & feature) == feature);
 }
-EXPORT_SYMBOL_GPL(amd_nb_has_feature);
+//EXPORT_SYMBOL_GPL(amd_nb_has_feature);
 
 struct amd_northbridge *node_to_amd_nb(int node)
 {
 	return (node < amd_northbridges.num) ? &amd_northbridges.nb[node] : NULL;
 }
-EXPORT_SYMBOL_GPL(node_to_amd_nb);
+//EXPORT_SYMBOL_GPL(node_to_amd_nb);
 
 static struct pci_dev *next_northbridge(struct pci_dev *dev,
 					const struct pci_device_id *ids)
@@ -179,13 +185,13 @@ int amd_smn_read(u16 node, u32 address, u32 *value)
 {
 	return __amd_smn_rw(node, address, value, false);
 }
-EXPORT_SYMBOL_GPL(amd_smn_read);
+//EXPORT_SYMBOL_GPL(amd_smn_read);
 
 int amd_smn_write(u16 node, u32 address, u32 value)
 {
 	return __amd_smn_rw(node, address, &value, true);
 }
-EXPORT_SYMBOL_GPL(amd_smn_write);
+//EXPORT_SYMBOL_GPL(amd_smn_write);
 
 
 int amd_cache_northbridges(void)
@@ -290,7 +296,7 @@ int amd_cache_northbridges(void)
 
 	return 0;
 }
-EXPORT_SYMBOL_GPL(amd_cache_northbridges);
+//EXPORT_SYMBOL_GPL(amd_cache_northbridges);
 
 /*
  * Ignores subdevice/subvendor but as far as I can figure out
@@ -456,7 +462,7 @@ void amd_flush_garts(void)
 	if (!flushed)
 		pr_notice("nothing to flush?\n");
 }
-EXPORT_SYMBOL_GPL(amd_flush_garts);
+//EXPORT_SYMBOL_GPL(amd_flush_garts);
 
 static void __fix_erratum_688(void *info)
 {
@@ -467,7 +473,7 @@ static void __fix_erratum_688(void *info)
 }
 
 /* Apply erratum 688 fix so machines without a BIOS fix work. */
-static __init void fix_erratum_688(void)
+static void fix_erratum_688(void)
 {
 	struct pci_dev *F4;
 	u32 val;
@@ -493,7 +499,7 @@ static __init void fix_erratum_688(void)
 	pr_info("x86/cpu/AMD: CPU erratum 688 worked around\n");
 }
 
-static __init int init_amd_nbs(void)
+int init_amd_nbs(void)
 {
 	amd_cache_northbridges();
 	amd_cache_gart();
@@ -504,4 +510,4 @@ static __init int init_amd_nbs(void)
 }
 
 /* This has to go after the PCI subsystem */
-fs_initcall(init_amd_nbs);
+//fs_initcall(init_amd_nbs);

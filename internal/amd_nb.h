@@ -14,6 +14,8 @@ struct amd_nb_bus_dev_range {
 
 extern const struct amd_nb_bus_dev_range amd_nb_bus_dev_ranges[];
 
+extern int init_amd_nbs(void);
+
 extern bool early_is_amd_nb(u32 value);
 extern struct resource *amd_get_mmconfig_range(struct resource *res);
 extern int amd_cache_northbridges(void);
